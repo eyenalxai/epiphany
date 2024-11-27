@@ -1,7 +1,10 @@
+import { Player } from "@/components/player"
+import ReactPlayer from "react-player"
+
 export default function Home() {
 	return (
 		<main>
-			<h1>Hello</h1>
+			<Player /> <Player />
 		</main>
 	)
 }
