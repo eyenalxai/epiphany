@@ -42,7 +42,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				)}
 			>
 				<Providers attribute="class" defaultTheme="system" enableSystem>
-					{children}
+					<main
+						className={cn(
+							"container",
+							"mx-auto",
+							"max-w-screen-sm",
+							"px-4",
+							"mt-12"
+						)}
+					>
+						{children}
+					</main>
 				</Providers>
 			</body>
 		</html>
