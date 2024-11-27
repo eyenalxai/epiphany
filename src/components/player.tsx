@@ -1,14 +1,29 @@
 "use client"
 import { cn } from "@/lib/utils"
-import { useEffect, useRef, useState } from "react"
+import {
+	type Dispatch,
+	type SetStateAction,
+	useEffect,
+	useRef,
+	useState
+} from "react"
 import ReactPlayer from "react-player"
 
 interface PlayerProps {
 	src: string
 	startPosition: "left" | "right"
+	isPlaying: boolean
+	setIsPlaying: Dispatch<SetStateAction<boolean>>
+	setIsReady: Dispatch<SetStateAction<boolean>>
 }
 
-export const Player = ({ src, startPosition }: PlayerProps) => {
+export const Player = ({
+	src,
+	startPosition,
+	isPlaying,
+	setIsPlaying,
+	setIsReady
+}: PlayerProps) => {
 	const [hasWindow, setHasWindow] = useState(false)
 	const playerRef = useRef<ReactPlayer | null>(null)
 	const audioContextRef = useRef<AudioContext | null>(null)
@@ -95,7 +110,14 @@ export const Player = ({ src, startPosition }: PlayerProps) => {
 					ref={playerRef}
 					url={src}
 					controls
-					onPlay={handlePlay}
+					onPlay={() => {
+						handlePlay()
+						setIsPlaying(true)
+					}}
+					onPause={() => setIsPlaying(false)}
+					onReady={() => setIsReady(true)}
+					playing={isPlaying}
+					loop
 				/>
 			</div>
 		</div>
