@@ -1,4 +1,5 @@
 "use client"
+import { cn } from "@/lib/utils"
 import { useEffect, useRef, useState } from "react"
 import ReactPlayer from "react-player"
 
@@ -73,5 +74,30 @@ export const Player = ({ src, startPosition }: PlayerProps) => {
 
 	if (!hasWindow) return null
 
-	return <ReactPlayer ref={playerRef} url={src} controls onPlay={handlePlay} />
+	return (
+		<div className={cn("flex", "flex-col", "items-start", "justify-start")}>
+			<span className={cn("font-semibold", "ml-1")}>
+				{startPosition.toLocaleUpperCase()}
+			</span>
+			<div
+				className={cn(
+					"flex",
+					"justify-center",
+					"items-center",
+					"border",
+					"p-2",
+					"rounded-md"
+				)}
+			>
+				<ReactPlayer
+					width={"auto"}
+					height={"100%"}
+					ref={playerRef}
+					url={src}
+					controls
+					onPlay={handlePlay}
+				/>
+			</div>
+		</div>
+	)
 }
