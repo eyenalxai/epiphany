@@ -4,9 +4,10 @@ import ReactPlayer from "react-player"
 
 interface PlayerProps {
 	src: string
+	startPosition: "left" | "right"
 }
 
-export const Player = ({ src }: PlayerProps) => {
+export const Player = ({ src, startPosition }: PlayerProps) => {
 	const [hasWindow, setHasWindow] = useState(false)
 	const playerRef = useRef<ReactPlayer | null>(null)
 	const audioContextRef = useRef<AudioContext | null>(null)
@@ -43,8 +44,8 @@ export const Player = ({ src }: PlayerProps) => {
 					.connect(audioContextRef.current.destination)
 			}
 
-			// Start rotating 3D sound effect
-			let angle = 0
+			// Determine initial angle based on startPosition
+			let angle = startPosition === "left" ? Math.PI : 0 // Left starts at 180 degrees, right at 0
 			const radius = 1 // Radius of the circle
 			const interval = setInterval(() => {
 				if (pannerRef.current && audioContextRef.current) {
@@ -62,7 +63,7 @@ export const Player = ({ src }: PlayerProps) => {
 						z,
 						audioContextRef.current.currentTime
 					)
-					angle += 0.05
+					angle += 0.05 // Adjust this value for speed of rotation
 				}
 			}, 100)
 
