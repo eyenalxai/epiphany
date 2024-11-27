@@ -89,6 +89,8 @@ export const Player = ({
 
 	if (!hasWindow) return null
 
+	if (!src) return null
+
 	return (
 		<div className={cn("flex", "flex-col", "items-start", "justify-start")}>
 			<span className={cn("font-semibold", "ml-1")}>
