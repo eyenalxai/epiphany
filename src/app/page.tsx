@@ -4,7 +4,8 @@ import ReactPlayer from "react-player"
 export default function Home() {
 	return (
 		<main>
-			<Player /> <Player />
+			<Player src={"/1.mp4"} direction="left" />{" "}
+			<Player src={"/2.mp4"} direction="right" />
 		</main>
 	)
 }
