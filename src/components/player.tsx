@@ -4,28 +4,28 @@ import ReactPlayer from "react-player"
 
 interface PlayerProps {
 	src: string
-	direction: "left" | "right"
 }
 
-export const Player = ({ src, direction }: PlayerProps) => {
+export const Player = ({ src }: PlayerProps) => {
 	const [hasWindow, setHasWindow] = useState(false)
 	const playerRef = useRef<ReactPlayer | null>(null)
 	const audioContextRef = useRef<AudioContext | null>(null)
-	const pannerRef = useRef<StereoPannerNode | null>(null)
+	const pannerRef = useRef<PannerNode | null>(null)
 	const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			setHasWindow(true)
 			audioContextRef.current = new AudioContext()
-			pannerRef.current = audioContextRef.current.createStereoPanner()
-			pannerRef.current.pan.value = direction === "left" ? -1 : 1
+			pannerRef.current = audioContextRef.current.createPanner()
+			pannerRef.current.panningModel = "HRTF"
+			pannerRef.current.distanceModel = "inverse"
 		}
 
 		return () => {
 			audioContextRef.current?.close()
 		}
-	}, [direction])
+	}, [])
 
 	const handlePlay = async () => {
 		if (audioContextRef.current?.state === "suspended") {
@@ -42,6 +42,31 @@ export const Player = ({ src, direction }: PlayerProps) => {
 					.connect(pannerRef.current)
 					.connect(audioContextRef.current.destination)
 			}
+
+			// Start rotating 3D sound effect
+			let angle = 0
+			const radius = 1 // Radius of the circle
+			const interval = setInterval(() => {
+				if (pannerRef.current && audioContextRef.current) {
+					const x = radius * Math.cos(angle)
+					const z = radius * Math.sin(angle)
+					pannerRef.current.positionX.setValueAtTime(
+						x,
+						audioContextRef.current.currentTime
+					)
+					pannerRef.current.positionY.setValueAtTime(
+						0,
+						audioContextRef.current.currentTime
+					)
+					pannerRef.current.positionZ.setValueAtTime(
+						z,
+						audioContextRef.current.currentTime
+					)
+					angle += 0.05
+				}
+			}, 100)
+
+			return () => clearInterval(interval)
 		}
 	}
 
